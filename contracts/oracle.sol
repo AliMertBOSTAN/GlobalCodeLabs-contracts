@@ -26,6 +26,10 @@ contract SimplePriceOracle is Ownable, AccessControl {
 		emit PriceUpdated(newPrice);
 	}
 
+    function getPrice() external view returns (uint256) {
+        return price;
+    }
+
     function registerWallet(address wallet) external onlyRole(DEFAULT_ADMIN_ROLE) {
         registeredWallets.push(wallet);
     }

@@ -13,19 +13,23 @@ interface IPriceOracle {
 }
 
 contract MERT is ERC20, Ownable, ERC20Permit, ERC20FlashMint {
-    
+    bool public transferOnlyKYC;
     IPriceOracle public priceOracle;
 
-    constructor(address initialOwner)
-        ERC20("MERT", "MRT")
-        Ownable(initialOwner)
-        ERC20Permit("MERT")
-    {}
+    constructor(address initialOwner) ERC20("MERT", "MRT") Ownable(initialOwner) ERC20Permit("MERT") {
+        transferOnlyKYC = false;
+    }
 
     modifier checkKYC(address to) {
-        require(priceOracle.isWalletRegistered(msg.sender), "Sender is not registered");
-        require(priceOracle.isWalletRegistered(to), "Recipient is not registered");
+        if(transferOnlyKYC) {
+            require(priceOracle.isWalletRegistered(msg.sender), "Sender is not registered");
+            require(priceOracle.isWalletRegistered(to), "Recipient is not registered");
+        }
         _;
+    }
+
+    function setTransferOnlyKYC(bool _enabled) public onlyOwner {
+        transferOnlyKYC = _enabled;
     }
 
     function setPriceOracle(address _priceOracle) public onlyOwner {
