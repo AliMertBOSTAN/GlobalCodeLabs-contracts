@@ -14,7 +14,7 @@ contract SimplePriceOracle is Ownable, AccessControl {
 
 	constructor(address initialOwner, uint256 initialPrice) Ownable(initialOwner) {
 		price = initialPrice;
-        grantRole(DEFAULT_ADMIN_ROLE, initialOwner);
+        _grantRole(DEFAULT_ADMIN_ROLE, initialOwner);
 	}
 
     function grantControlRole(address account) public onlyOwner {
